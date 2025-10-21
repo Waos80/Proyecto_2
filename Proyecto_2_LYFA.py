@@ -1,3 +1,6 @@
+from automata import AFD
+from analisis import Lexico
+import threading
 import tkinter as tk
 from tkinter import filedialog, messagebox
 
@@ -10,8 +13,82 @@ ventana.resizable(False, False)
 # Variable para guardar la ruta del archivo actual
 ruta_archivo = None
 
+digito = list("0123456789")
+OP = ["SUMA", "RESTA", "MULTIPLICACION", "DIVISION", "POTENCIA", "RAIZ", "INVERSO", "MOD"]
+    
+automata = AFD()
+automata.crearEstados(
+        [False, False, False, True, False, False, False, False, False, False, False, False, True, True, True, True, True]
+    )
+
+automata.crearTransiciones({
+    0: [
+        (['<'], 1),
+        (['-'], 2),
+        (digito, 3),
+    ],
+    1: [
+        (["Operacion= "], 4),
+        (['/'], 5),
+        (["Numero"], 6),
+    ],
+    2: [
+        (digito, 3)
+    ],
+    3: [
+        (digito, 3),
+        (['.'], 7)
+    ],
+    4: [
+        #([' '], 4),
+        (OP, 8)
+    ],
+    5: [
+        #([' '], 9),
+        (["Operacion"], 10),
+        (["Numero"], 11)
+    ],
+    6: [
+        #([' '], 6),
+        (['>'], 12)
+    ],
+    7: [
+        (digito, 13)
+    ],
+    8: [
+        #([' '], 8),
+        (['>'], 14)
+    ],
+    9: [
+        #([' '], 9),
+        (["Operacion"], 10)
+    ],
+    10: [
+        #([' '], 10),
+        (['>'], 15)
+    ],
+    11: [
+        #([' '], 11),
+        (['>'], 16)
+    ],
+    13: [
+        (digito, 13)
+    ],
+})
+
+tabla = {
+    3: "numero",
+    12: "an",
+    13: "numero",
+    14: "ao",
+    15: "co",
+    16: "cn"
+}
+
+lexico = Lexico(automata, tabla)
+
 # Función para abrir archivo
-def abrir_archivo():
+def abrir_archivo() -> None:
     global ruta_archivo
     ruta_archivo = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
     if ruta_archivo:
@@ -21,7 +98,7 @@ def abrir_archivo():
             texto.insert(tk.END, contenido)
 
 # Función para guardar cambios
-def guardar_archivo():
+def guardar_archivo() -> None:
     global ruta_archivo
     if ruta_archivo == None:
         messagebox.showerror("Archivo", "Antes de guardar, debe de abrir un archivo para sobreescribir.")
@@ -32,7 +109,7 @@ def guardar_archivo():
         messagebox.showinfo("Guardado", "Cambios guardados correctamente.")
 
 # Función para guardar como nuevo archivo
-def guardar_como():
+def guardar_como() -> None:
     nueva_ruta = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt")])
     if nueva_ruta:
         with open(nueva_ruta, "w", encoding="utf-8") as f:
@@ -43,6 +120,21 @@ def guardar_como():
 
 #Falta función para abrir el código 
 #Falta función para correr el código
+
+def sigue_ejecucion(hilo: threading.Thread):
+    if not hilo.is_alive():
+        
+        pass
+    else:
+        ventana.after(1000, sigue_ejecucion, hilo)
+
+def analizar_codigo():
+    pass
+
+def analizar():
+    hilo = threading.Thread(target=analizar_codigo)
+    hilo.start()
+    ventana.after(1000, )
 
 # Frame superior con botones principales
 frame_superior = tk.Frame(ventana)
