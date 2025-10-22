@@ -14,7 +14,10 @@ if __name__ == "__main__":
     
     automata = analisis.AFD()
     automata.crearEstados(
-        [False, False, False, True, False, False, False, False, False, False, False, False, True, True, True, True, True]
+        [False, False, False, True, 
+         False, False, False, False, 
+         False, False, False, True, 
+         True, True, True, True]
     )
 
     automata.crearTransiciones({
@@ -36,50 +39,40 @@ if __name__ == "__main__":
             (['.'], 7)
         ],
         4: [
-            #([' '], 4),
             (OP, 8)
         ],
         5: [
-            #([' '], 9),
-            (["Operacion"], 10),
-            (["Numero"], 11)
+            (["Operacion"], 9),
+            (["Numero"], 10)
         ],
         6: [
-            #([' '], 6),
-            (['>'], 12)
+            (['>'], 11)
         ],
         7: [
-            (digito, 13)
+            (digito, 12)
         ],
         8: [
-            #([' '], 8),
-            (['>'], 14)
+            (['>'], 13)
         ],
         9: [
-            #([' '], 9),
-            (["Operacion"], 10)
+            (['>'], 14)
         ],
         10: [
-            #([' '], 10),
             (['>'], 15)
         ],
-        11: [
-            #([' '], 11),
-            (['>'], 16)
-        ],
-        13: [
-            (digito, 13)
-        ],
+        12: [
+            (digito, 12)
+        ]
     })
 
     info = LeerArchivo("./Entrada1.txt")
     tabla = {
         3: "numero",
-        12: "an",
-        13: "numero",
-        14: "ao",
-        15: "co",
-        16: "cn"
+        11: "an",
+        12: "numero",
+        13: "ao",
+        14: "co",
+        15: "cn",
     }
 
     l = analisis.Lexico(automata, tabla)
