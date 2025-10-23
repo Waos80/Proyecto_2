@@ -1,11 +1,8 @@
 from automata import AFD
-import os
 import analisis
 import threading
 import tkinter as tk
 from tkinter import filedialog, messagebox
-
-cwd = os.getcwd()
 
 def LeerArchivo(ruta: str) -> str:
     info = ""
@@ -116,84 +113,82 @@ def analizar():
             f.write(texto.get("1.0", tk.END))
     info = LeerArchivo(ruta_archivo)
 
-    if __name__ == "__main__":
-        digito = list("0123456789")
-        OP = ["SUMA", "RESTA", "MULTIPLICACION", "DIVISION", "POTENCIA", "RAIZ", "INVERSO", "MOD"]
+    digito = list("0123456789")
+    OP = ["SUMA", "RESTA", "MULTIPLICACION", "DIVISION", "POTENCIA", "RAIZ", "INVERSO", "MOD"]
         
-        automata = analisis.AFD()
-        automata.crearEstados(
-            [False, False, False, True, 
-            False, False, False, False, 
-            False, False, False, True, 
-            True, True, True, True]
-        )
+    automata = analisis.AFD()
+    automata.crearEstados(
+        [False, False, False, True, 
+        False, False, False, False, 
+        False, False, False, True, 
+        True, True, True, True]
+    )
 
-        automata.crearTransiciones({
-            0: [
-                (['<'], 1),
-                (['-'], 2),
-                (digito, 3),
-            ],
-            1: [
-                (["Operacion= "], 4),
-                (['/'], 5),
-                (["Numero"], 6),
-            ],
-            2: [
-                (digito, 3)
-            ],
-            3: [
-                (digito, 3),
-                (['.'], 7)
-            ],
-            4: [
-                (OP, 8)
-            ],
-            5: [
-                (["Operacion"], 9),
-                (["Numero"], 10)
-            ],
-            6: [
-                (['>'], 11)
-            ],
-            7: [
-                (digito, 12)
-            ],
-            8: [
-                (['>'], 13)
-            ],
-            9: [
-                (['>'], 14)
-            ],
-            10: [
-                (['>'], 15)
-            ],
-            12: [
-                (digito, 12)
-            ]
-        })
+    automata.crearTransiciones({
+        0: [
+            (['<'], 1),
+            (['-'], 2),
+            (digito, 3),
+        ],
+        1: [
+            (["Operacion= "], 4),
+            (['/'], 5),
+            (["Numero"], 6),
+        ],
+        2: [
+            (digito, 3)
+        ],
+        3: [
+            (digito, 3),
+            (['.'], 7)
+        ],
+        4: [
+            (OP, 8)
+        ],
+        5: [
+            (["Operacion"], 9),
+            (["Numero"], 10)
+        ],
+        6: [
+            (['>'], 11)
+        ],
+        7: [
+            (digito, 12)
+        ],
+        8: [
+            (['>'], 13)
+        ],
+        9: [
+            (['>'], 14)
+        ],
+        10: [
+            (['>'], 15)
+        ],
+        12: [
+            (digito, 12)
+        ]
+    })
 
-        info = LeerArchivo(cwd + "/Entrada1.txt")
-        tabla = {
-            3: "numero",
-            11: "an",
-            12: "numero",
-            13: "ao",
-            14: "co",
-            15: "cn",
-        }
+    tabla = {
+        3: "numero",
+        11: "an",
+        12: "numero",
+        13: "ao",
+        14: "co",
+        15: "cn",
+    }
 
-        l = analisis.Lexico(automata, tabla)
-        l.ProcesarEntrada(info)
-        for token in l.tokens:
-            if token[0] == "error":
-                error = True
-                break
-        if not error:
-            messagebox.showinfo("Ejecución","No se encontraron errores en el archivo de entrada. \nArchivo 'Resultados.html generado.")
-        else:
-            messagebox.showerror("Ejecución","Se encontraron errores en el archivo de entrada.\nArchivo 'Errores.html generado.")
-            reporteErrores(l)
+    l = analisis.Lexico(automata, tabla)
+    l.ProcesarEntrada(info)
+    for token in l.tokens:
+        if token[0] == "error":
+            error = True
+            break
+    if not error:
+        messagebox.showinfo("Ejecución","No se encontraron errores en el archivo de entrada. \nArchivo 'Resultados.html generado.")
+    else:
+        messagebox.showerror("Ejecución","Se encontraron errores en el archivo de entrada.\nArchivo 'Errores.html generado.")
+        reporteErrores(l)
 
 # Crear ventana principal
 ventana = tk.Tk()
@@ -244,4 +239,5 @@ btn_Help.pack(pady = 5)
 
 # Ejecutar la interfaz
 ventana.mainloop()
+
 
