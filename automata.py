@@ -167,7 +167,6 @@ class AFD(AP):
     def evaluarPorTokens(self, entrada: str, tabla: dict[int, str]) -> list:
         tokens: list = []
         copia_entrada = entrada
-        print(len(copia_entrada))
         if len(self.estados) <= 0:
             return # Error: No hay estados
         
@@ -244,7 +243,6 @@ class AFD(AP):
 
             if not hay_transicion:
                 error = ""
-
                 error += copia_entrada[fin]
 
                 tokens.append(("error", error, fin, linea))
@@ -266,5 +264,11 @@ class AFD(AP):
 
             aux: dict = {transicion[1]: idx for idx, transicion in enumerate(estado[0])}
             indice_transicion = aux.get(entrada[0] if len(entrada) > 0 else entrada)
+
+        elif not estado[1] and len(tokens) <= 0:
+            error = ""
+            error += copia_entrada[fin - 1]
+
+            tokens.append(("error", error, fin, linea))
 
         return tokens
