@@ -6,10 +6,10 @@ from tkinter import filedialog, messagebox
 
 def LeerArchivo(ruta: str) -> str:
     info = ""
-    with open(ruta, "r") as f:
+    with open(ruta, "r", newline="") as f:
         info = f.read()
 
-    return info
+    return info[:-1]
 
 def findError(lexico: analisis.Lexico) -> bool:
     for token in lexico.tokens:
@@ -79,7 +79,7 @@ def guardar_archivo() -> None:
         messagebox.showerror("Archivo", "Antes de guardar, debe de abrir un archivo para sobreescribir.")
         ruta_archivo = filedialog.askopenfilename(filetypes = [("Text files", "*.txt")])
     else:
-        with open(ruta_archivo, "w", encoding="utf-8") as f:
+        with open(ruta_archivo, "w", encoding="utf-8", newline="") as f:
             f.write(texto.get("1.0", tk.END))
         messagebox.showinfo("Guardado", "Cambios guardados correctamente.")
 
@@ -87,30 +87,20 @@ def guardar_archivo() -> None:
 def guardar_como() -> None:
     nueva_ruta = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt")])
     if nueva_ruta:
-        with open(nueva_ruta, "w", encoding="utf-8") as f:
+        with open(nueva_ruta, "w", encoding="utf-8", newline="") as f:
             f.write(texto.get("1.0", tk.END))
         messagebox.showinfo("Guardado", "Archivo guardado como nuevo.")
         global ruta_archivo
         ruta_archivo = nueva_ruta
 
-def sigue_ejecucion(hilo: threading.Thread):
-    if not hilo.is_alive():
-        
-        pass
-    else:
-        ventana.after(1000, sigue_ejecucion, hilo)
-
-def analizar_codigo():
-    pass
 
 def analizar():
     global ruta_archivo
     error = False
     if ruta_archivo == None:
-        messagebox.showerror("Archivo","No hay ningún archivo para analizar. \nSeleccione un archivo.")
-        abrir_archivo()
-        with open(ruta_archivo, "w", encoding="utf-8") as f:
-            f.write(texto.get("1.0", tk.END))
+        guardar_como()
+        if ruta_archivo == None:
+            return
     info = LeerArchivo(ruta_archivo)
 
     digito = list("0123456789")
