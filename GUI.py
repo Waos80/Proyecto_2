@@ -1,8 +1,11 @@
 from automata import AFD
+import os
 import analisis
 import threading
 import tkinter as tk
 from tkinter import filedialog, messagebox
+
+cwd = os.getcwd()
 
 def LeerArchivo(ruta: str) -> str:
     info = ""
@@ -170,7 +173,7 @@ def analizar():
             ]
         })
 
-        info = LeerArchivo("C:/Users/bruno/Desktop/Lenguajes Formales y Autómatas/Proyecto_2_LYFA/Entrada1.txt")
+        info = LeerArchivo(cwd + "/Entrada1.txt")
         tabla = {
             3: "numero",
             11: "an",
@@ -241,3 +244,4 @@ btn_Help.pack(pady = 5)
 
 # Ejecutar la interfaz
 ventana.mainloop()
+
